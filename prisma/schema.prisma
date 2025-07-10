@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  password    String
+  userClients UserClient[]
+  createdAt   DateTime     @default(now())
+}
+
+model Client {
+  id          String         @id @default(uuid())
+  name        String
+  entries     ClientEntry[]
+  userClients UserClient[]
+  createdAt   DateTime       @default(now())
+}
+
+model UserClient {
+  userId   String
+  clientId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@id([userId, clientId])
+}
+
+model ClientEntry {
+  id         String        @id @default(uuid())
+  client     Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId   String
+  status     Status?      
+  note       String[]
+  tag1       String?
+  tag2       String?
+  tag3       String?
+  tag4       String?
+  tag5       String?
+  tag6       String?
+  tag7       String?
+  tag8       String?
+  tagTimers  TagTimer[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model TagTimer {
+  id             String       @id @default(uuid())
+  clientEntry    ClientEntry  @relation(fields: [clientEntryId], references: [id], onDelete: Cascade)
+  clientEntryId  String
+  tagField       Int
+  tagValue       String
+  startTime      DateTime
+  endTime        DateTime?
+  durationMins   Int?
+  createdAt      DateTime     @default(now())
+}
+
+enum Status {
+  in_progress
+  completed
+  overdue
+}
