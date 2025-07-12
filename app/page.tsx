@@ -1,4 +1,4 @@
-import ClientTable from "@/components/client-table";
+import ClientTable from "@/components/client-data-table";
 import Header from "@/components/header";
 import Image from "next/image";
 

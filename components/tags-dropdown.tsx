@@ -21,20 +21,19 @@ import {
 
 interface TagsDropDownProps {
   onTagSelect?: (tag: { label: string; value: number } | null) => void
-  tagNumber?: number
   index: number;
   isEnabled: boolean;
   currentStep: number;
   value?: string | null; // Add this to control the dropdown value
 }
 
-export function TagsDropDown({ onTagSelect, tagNumber, index, isEnabled, currentStep, value }: TagsDropDownProps) {
+export function TagsDropDown({ onTagSelect, index, isEnabled, currentStep, value }: TagsDropDownProps) {
   const [open, setOpen] = React.useState(false)
   const [internalValue, setInternalValue] = React.useState("")
 
   // Use controlled value if provided, otherwise use internal state
   const displayValue = value || internalValue;
-
+  // ...existing code...
   return (
     <div className="flex items-center gap-2">
       <span>{index + 1}.</span>
@@ -69,21 +68,15 @@ export function TagsDropDown({ onTagSelect, tagNumber, index, isEnabled, current
                     value={tag.label}
                     onSelect={(currentValue) => {
                       const newValue = currentValue === displayValue ? "" : currentValue
-                      
                       // Update internal state if not controlled
                       if (!value) {
                         setInternalValue(newValue)
                       }
-                      
                       setOpen(false)
-                      
                       // Call the callback with the selected tag
                       if (onTagSelect) {
                         if (newValue) {
-                          const selectedTag = tags.find((tag, index) => {
-                            tag.label === newValue
-                            console.log("Selected tag:", tag, "Index:", index)
-                          })
+                          const selectedTag = tags.find((tag) => tag.label === newValue)
                           if (selectedTag) {
                             onTagSelect({ label: selectedTag.label, value: parseInt(selectedTag.value) })
                           }

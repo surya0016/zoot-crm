@@ -61,6 +61,7 @@ model TagTimer {
   tagValue       String
   startTime      DateTime
   endTime        DateTime?
+  countDownMins  Int
   durationMins   Int?
   createdAt      DateTime     @default(now())
 }

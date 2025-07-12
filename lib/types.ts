@@ -41,22 +41,17 @@ export interface TagConfig {
   isCustom: boolean
 }
 
-export type InputType = "note" | "link"
-
-export interface NoteItem {
-  id: string
-  type: InputType
-  content: string
-  title?: string
+interface Tag {
+  tag: string
 }
 
 import { Status } from "@prisma/client"
 
-interface Entry {
+export interface Entry {
   id: string
   clientId: string
   status: Status
-  note?: string
+  note?: string[]
   tag1?: string
   tag2?: string
   tag3?: string
@@ -65,11 +60,13 @@ interface Entry {
   tag6?: string
   tag7?: string
   tag8?: string
+  tags?: { [key: string]: string | null }[];
+  tagTimers?: any[];
   createdAt?: string
   updatedAt?: string
 }
 
-interface ClientData {
+export interface ClientData {
   id: string
   name: string
   createdAt?: string
@@ -77,14 +74,8 @@ interface ClientData {
   entry: Entry
 }
 
-//  {
-//     id: '884bf3be-51cc-4b4d-918e-46a35a301df3',
-//     name: 'Surya',
-//     createdAt: 2025-07-10T11:18:29.126Z,
-//     entries: null,
-//     entry: Entry
-//   }
-
-export interface AddNoteModalProps {
-  onAddItem?: (item: Omit<NoteItem, 'id'>) => void
+export interface TagUpdateProps {
+  entryId: string
+  tagIndex: number
+  tag: { label: string; value: number } | null
 }

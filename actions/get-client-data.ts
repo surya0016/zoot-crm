@@ -1,4 +1,6 @@
 import { db } from "@/lib/db";
+import { TagUpdateProps } from "@/lib/types";
+import { NextResponse } from "next/server";
 
 export async function getClientData() {
   try {
@@ -18,4 +20,32 @@ export async function getClientData() {
     console.error("Error fetching client data:", error);
     throw new Error("Failed to fetch client data");
   }
+}
+
+export async function updateClientTags({clientId, tagIndex, tag}:TagUpdateProps) {
+  try {
+      if (!clientId || tagIndex === undefined || tag === undefined) {
+        return new NextResponse("Invalid request data", { status: 400 });
+      }
+      // Update the tag in the database
+      const updatedEntry = await db.client.update({
+        where: {id: clientId},
+        data:{
+          entries: {
+            update: {
+              where: { id: clientId },
+              data:{
+                [`tag${tagIndex + 1}`]: tag, // Adjusting index for tag1, tag2, etc.
+                updatedAt: new Date().toISOString(), // Update the timestamp
+              }
+            },
+          },
+        }
+      })
+      console.log("Updated Entry: ", updatedEntry);
+      return updatedEntry;
+    } catch (error) {
+      console.error("[UPDATE CLIENT ACTION ERROR]: ", error);
+      return new Error("Internal server error");
+    }
 }

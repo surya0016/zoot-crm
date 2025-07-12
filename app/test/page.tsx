@@ -1,4 +1,5 @@
 import { getClientData } from '@/actions/get-client-data'
+import ClientDataTable from '@/components/client-data-table'
 import React from 'react'
 
 const Page = async() => {
@@ -7,12 +8,7 @@ const Page = async() => {
   return (
     <div>
       <main className="flex-1 p-4 lg:p-6 overflow-auto">
-        <button className='border border-white p-3 mr-3'>
-          Click Me
-        </button>
-        <button className='border border-white p-3'>
-          Click Me
-        </button>
+        <ClientDataTable/>
       </main>
     </div>
   )
