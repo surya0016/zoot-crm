@@ -8,8 +8,6 @@ export async function PUT(req: Request) {
       console.error("Invalid request data", { entryId, tagIndex, tag });
       return new NextResponse("Invalid request data", { status: 400 });
     }
-    // Update the tag in the ClientEntry
-    console.log("Updating tag for entryId:", entryId, "tagIndex:", tagIndex, "tag:", tag);
     const tagValue = tag ? tag.label : null; // Use label for the tag value
     const updatedEntry = await db.clientEntry.update({
       where: { id: entryId },

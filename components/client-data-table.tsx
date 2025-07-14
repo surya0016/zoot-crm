@@ -15,9 +15,10 @@ import { TagsDropDown } from "./tags-dropdown";
 import { TagUpdateProps } from "@/lib/types";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
+import EditableInput from "./editable-input";
 
 const ClientDataTable = () => {
-  const { clientData, error, loading, fetchClientData, updateTag } = useClientContext();
+  const { clientData, error, loading, dataLoading, fetchClientData, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
 
@@ -80,7 +81,7 @@ const ClientDataTable = () => {
       <Table>
         <TableHeader>
             <TableRow>
-              <TableHead className="border-l border-t text-center">Client ID</TableHead>
+              <TableHead className="border-l border-t text-center">No.</TableHead>
               <TableHead className="border-l border-t text-center">Client Name</TableHead>
               <TableHead className="border-l border-t text-center">Note/Link</TableHead>
               <TableHead className="border-l border-t text-center">Latest Tag</TableHead>
@@ -102,7 +103,7 @@ const ClientDataTable = () => {
             return (
               <TableRow key={client.id} className="hover:bg-gray-100 dark:hover:bg-gray-800" >
                 <TableCell className="border text-center">{index+1}</TableCell>
-                <TableCell className="border text-center">{client.name}</TableCell>
+                <TableCell className="border text-center"><EditableInput value={client.name} id={client.id}/></TableCell>
                 <TableCell className="border text-center"><NoteRender note={client.entry.note}/></TableCell>
                 <TableCell className="border text-center">{latestTag}</TableCell>
                 <TableCell className="border text-center">{123}</TableCell>
@@ -117,6 +118,7 @@ const ClientDataTable = () => {
                         handleTagChange({ entryId: client.entry.id, tagIndex: tagIndex, tag})
                       }}
                       currentStep={currentStep}
+                      
                     />
                   </TableCell>
                 ))}

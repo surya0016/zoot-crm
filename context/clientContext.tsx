@@ -7,6 +7,7 @@ import axios from "axios"
 interface ClientContextProps {
   clientData: ClientData[]
   loading: boolean
+  dataLoading: boolean
   error: string | null
   fetchClientData: () => void
   addClient: (clientName: string) => void
@@ -22,6 +23,7 @@ const ClientContext = createContext<ClientContextProps | null>(null)
 export function ClientContextProvider({children}:{children: ReactNode}){
   const [clientData, setClientData] = useState<ClientData[]>()
   const [loading, setLoading] = useState(false)
+  const [dataLoading, setDataLoading] = useState(false)
   const [error, setError] = useState<string|null>(null)
 
   const fetchClientData = async () => {
@@ -58,7 +60,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 
   const updateTag = async({ entryId, tagIndex, tag }: TagUpdateProps) => {
     try {
-      setLoading(true)
+      setDataLoading(true)
       setError(null)
       const response = await axios.put('/api/client/update/tag', {
         entryId,
@@ -71,7 +73,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
       console.error("Error in updateTag: ", error)
       setError("Failed to update tag")
     } finally {
-      setLoading(false)
+      setDataLoading(false)
     }
   }
 
@@ -84,6 +86,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
     clientData: clientData || [], 
     loading,
     error,
+    dataLoading,
     fetchClientData,
     addClient,
     updateTag,

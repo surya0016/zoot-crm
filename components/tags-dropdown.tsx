@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Loader } from "lucide-react"
 import { tags } from "@/lib/data" 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -23,11 +23,12 @@ interface TagsDropDownProps {
   onTagSelect?: (tag: { label: string; value: number } | null) => void
   index: number;
   isEnabled: boolean;
+  updating?: boolean; // Optional prop to indicate if the dropdown is being updated
   currentStep: number;
   value?: string | null; // Add this to control the dropdown value
 }
 
-export function TagsDropDown({ onTagSelect, index, isEnabled, currentStep, value }: TagsDropDownProps) {
+export function TagsDropDown({ onTagSelect, index, updating, isEnabled, currentStep, value }: TagsDropDownProps) {
   const [open, setOpen] = React.useState(false)
   const [internalValue, setInternalValue] = React.useState("")
 
@@ -43,7 +44,7 @@ export function TagsDropDown({ onTagSelect, index, isEnabled, currentStep, value
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            disabled={!isEnabled}
+            disabled={!isEnabled || updating}
             className={cn(
               "min-w-[200px] max-w-[400px] w-fit justify-between",
               index < currentStep && displayValue !== null ? "border-blue-400 dark:border-blue-700" : "",
@@ -53,7 +54,7 @@ export function TagsDropDown({ onTagSelect, index, isEnabled, currentStep, value
             {displayValue
               ? tags.find((tag) => tag.label === displayValue)?.label
               : "Select tag..."}
-            <ChevronsUpDown className="opacity-50" />
+            {updating ? <Loader className="animate-spin opacity-50"/> : <ChevronsUpDown className="opacity-50" />}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="min-w-[200px] max-w-[400px] w-fit p-0">
