@@ -46,12 +46,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
   const addClient = async (clientName: string) => {
     try {
       const response = await axios.post('/api/client/create', { name: clientName })
-      if (response.status === 201) {
-        setClientData(prev => [...(prev || []), response.data.client])
-        setError(null)
-      } else {
-        setError("Failed to add client")
-      }
+      await fetchClientData(); // Always refresh from backend
     } catch (error) {
       console.error("Error in addClient: ", error)
       setError("Failed to add client")

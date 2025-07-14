@@ -80,7 +80,7 @@ const ClientDataTable = () => {
     <div>
       <Table>
         <TableHeader>
-            <TableRow>
+            <TableRow className="text-red-500">
               <TableHead className="border-l border-t text-center">No.</TableHead>
               <TableHead className="border-l border-t text-center">Client Name</TableHead>
               <TableHead className="border-l border-t text-center">Note/Link</TableHead>
@@ -130,5 +130,4 @@ const ClientDataTable = () => {
     </div>
   )
 }
-
 export default ClientDataTable

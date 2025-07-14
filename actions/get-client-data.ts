@@ -22,18 +22,18 @@ export async function getClientData() {
   }
 }
 
-export async function updateClientTags({clientId, tagIndex, tag}:TagUpdateProps) {
+export async function updateClientTags({entryId, tagIndex, tag}:TagUpdateProps) {
   try {
-      if (!clientId || tagIndex === undefined || tag === undefined) {
+      if (!entryId || tagIndex === undefined || tag === undefined) {
         return new NextResponse("Invalid request data", { status: 400 });
       }
       // Update the tag in the database
       const updatedEntry = await db.client.update({
-        where: {id: clientId},
+        where: {id: entryId},
         data:{
           entries: {
             update: {
-              where: { id: clientId },
+              where: { id: entryId },
               data:{
                 [`tag${tagIndex + 1}`]: tag, // Adjusting index for tag1, tag2, etc.
                 updatedAt: new Date().toISOString(), // Update the timestamp

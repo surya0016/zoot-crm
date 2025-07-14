@@ -9,6 +9,18 @@ export async function PUT(req: Request) {
       return new NextResponse("Invalid request data", { status: 400 });
     }
     const tagValue = tag ? tag.label : null; // Use label for the tag value
+    const tagTime = tag ? tag.time : null; // Use time if available
+
+    const updateTagTimer = await db.tagTimer.create({
+      data: {
+        tagValue,
+        startTime: new Date().toISOString(),
+        countDownMins: tagTime,
+        clientEntryId: entryId,
+        tagField: tagIndex + 1, // Prisma uses 1-based index for fields
+      },
+    });
+
     const updatedEntry = await db.clientEntry.update({
       where: { id: entryId },
       data: {
