@@ -1,12 +1,15 @@
 import { db } from "@/lib/db";
+import { TagTimerProps } from "@/lib/types";
 import { NextResponse } from "next/server";
 
 type Tag = { [key: string]: any };
-type TagTimer = { [key: string]: any };
 
 export async function GET(){
   try {
     const clientsData = await db.client.findMany({
+      where:{
+        createdAt: new Date.now(), // Fetch clients created today
+      },
       include:{
         entries: {
           include: {
@@ -19,7 +22,7 @@ export async function GET(){
     const clients = clientsData.map((clientData) => {
       const entry = clientData.entries[0] || null;
       let tags: Tag[] = [];
-      let tagTimers: TagTimer[] = [];
+      let tagTimers: TagTimerProps[] = [];
       if (entry) {
         tags = [
           { tag: entry.tag1 },
@@ -31,7 +34,12 @@ export async function GET(){
           { tag: entry.tag7 },
           { tag: entry.tag8 },
         ];
-        tagTimers = entry.tagTimers || [];
+        tagTimers = (entry.tagTimers || []).map((timer: any) => ({
+          ...timer,
+          createdAt: timer.createdAt instanceof Date ? timer.createdAt.toISOString() : timer.createdAt,
+          startTime: timer.startTime instanceof Date ? timer.startTime.toISOString() : timer.startTime,
+          endTime: timer.endTime instanceof Date ? timer.endTime.toISOString() : timer.endTime,
+        }));
       }
       return {
         ...clientData,
@@ -45,7 +53,7 @@ export async function GET(){
         entries: null,
       };
     });
-    console.log("Fetched Clients: ", clients.map(c => c.entry?.tags));
+    console.log("Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:", clients.map(c => c.entry?.tagTimers)); 
     return NextResponse.json({
       clients
     });

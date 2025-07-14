@@ -1,21 +1,22 @@
 import { db } from "@/lib/db";
+import { Status } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request) {
+  const { entryId, tagIndex, tag } = await req.json();
   try {
-    const { entryId, tagIndex, tag } = await req.json();
     if (!entryId || tagIndex === undefined || tag === undefined) {
       console.error("Invalid request data", { entryId, tagIndex, tag });
       return new NextResponse("Invalid request data", { status: 400 });
     }
     const tagValue = tag ? tag.label : null; // Use label for the tag value
-    const tagTime = tag ? tag.time : null; // Use time if available
+    const tagTime = tag ? tag.value : null; // Use time if available
 
-    const updateTagTimer = await db.tagTimer.create({
+    const createTagTimer = await db.tagTimer.create({
       data: {
         tagValue,
         startTime: new Date().toISOString(),
-        countDownMins: tagTime,
+        countDownSec: tagTime*60,
         clientEntryId: entryId,
         tagField: tagIndex + 1, // Prisma uses 1-based index for fields
       },
@@ -28,10 +29,28 @@ export async function PUT(req: Request) {
         updatedAt: new Date().toISOString(),
       },
     });
+      // Find the previous tagTimer record by clientEntryId and tagField
+    const previousTagTimer = await db.tagTimer.findFirst({
+      where: {
+        clientEntryId: entryId,
+        tagField: tagIndex, // Prisma uses 1-based index for fields
+      },
+    });
+    if (previousTagTimer) {
+      const updatePreviousTagTimer = await db.tagTimer.update({
+        where: {
+          id: previousTagTimer.id,
+        },
+        data: {
+          endTime: new Date().toISOString(),
+        },
+      });
+      console.log("Updated previous tag timer: ", updatePreviousTagTimer);
+    }
     console.log("Updated Entry: ", updatedEntry);
     return NextResponse.json(updatedEntry);
   } catch (error) {
-    console.error("[UPDATE CLIENT TAG API ERROR]: ", error);
+    console.error("[UPDATE CLIENT TAG API ERROR]: ", error, tag);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }

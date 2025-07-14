@@ -16,12 +16,15 @@ import { TagUpdateProps } from "@/lib/types";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
 import EditableInput from "./editable-input";
+import CountDown from "./countdown-timer";
+import StatusComponent from "./status-component";
+import AddClient from "./add-client";
 
 const ClientDataTable = () => {
   const { clientData, error, loading, dataLoading, fetchClientData, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
-
+  console.log("Client Tag Timer: ", clientData.map(c => c.entry?.tagTimers));
   useEffect(() => {
     setClients(clientData || []);
     console.log("Client Data Updated: ", clientData);
@@ -41,12 +44,10 @@ const ClientDataTable = () => {
   };
 
   const getClientTags = (clientId: string) => {
-    // Find the client by id
     const client = clients.find((c) => c.id === clientId);
     if (!client || !client.entry || !Array.isArray(client.entry.tags)) {
       return [null, null, null, null, null, null, null, null];
     }
-    // Map to array of tag values (or null)
     return client.entry.tags.map(tagObj => tagObj.tag ?? null);
   }
 
@@ -78,17 +79,23 @@ const ClientDataTable = () => {
 
   return (
     <div>
+      <div className="flex justify-between items-center mb-4">
+        <div className="font-bold text-2xl">14 date</div>
+        <div className="">
+          <AddClient/>
+        </div>
+      </div>
       <Table>
         <TableHeader>
-            <TableRow className="text-red-500">
-              <TableHead className="border-l border-t text-center">No.</TableHead>
-              <TableHead className="border-l border-t text-center">Client Name</TableHead>
-              <TableHead className="border-l border-t text-center">Note/Link</TableHead>
-              <TableHead className="border-l border-t text-center">Latest Tag</TableHead>
-              <TableHead className="border-l border-t text-center">Timer</TableHead>
-              <TableHead className="border-l border-t text-center">Status</TableHead>
+            <TableRow>
+              <TableHead className="border-l border-t text-center font-bold">No.</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Client Name</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Note/Link</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Latest Tag</TableHead>
+              <TableHead className="border-l border-t text-center font-bold min-w-25">Timer</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Status</TableHead>
               {Array.from({ length: 8 }, (_, index) => (
-                <TableHead key={index} className="border-l border-t text-center">
+                <TableHead key={index} className="border-l border-t text-center font-bold">
                   Tag {index + 1}
                 </TableHead>
               ))}
@@ -105,9 +112,9 @@ const ClientDataTable = () => {
                 <TableCell className="border text-center">{index+1}</TableCell>
                 <TableCell className="border text-center"><EditableInput value={client.name} id={client.id}/></TableCell>
                 <TableCell className="border text-center"><NoteRender note={client.entry.note}/></TableCell>
-                <TableCell className="border text-center">{latestTag}</TableCell>
-                <TableCell className="border text-center">{123}</TableCell>
-                <TableCell className="border text-center">{123}</TableCell>
+                <TableCell className="border text-center">{latestTag ? latestTag : "No Tag Selected"}</TableCell>
+                <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
+                <TableCell className="border text-center"><StatusComponent/></TableCell>
                 {Array.from({ length: 8 }, (_, tagIndex) => (
                   <TableCell key={tagIndex} className="border text-center">
                     <TagsDropDown
@@ -118,7 +125,6 @@ const ClientDataTable = () => {
                         handleTagChange({ entryId: client.entry.id, tagIndex: tagIndex, tag})
                       }}
                       currentStep={currentStep}
-                      
                     />
                   </TableCell>
                 ))}

@@ -1,38 +1,80 @@
+"use client"
+
 import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Clock } from 'lucide-react';
-import { useEffect, useState } from 'react'
 
 interface CountDownProps {
-  initialTime: number;
+  entryId: string;
+  tagName: string;
 }
 
-const CountDown: React.FC<CountDownProps> = ({ initialTime }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime*60);
-  const hours = String(Math.floor(timeLeft / 3600));
-  const minutes = String(Math.floor((timeLeft % 3600) / 60));
-  const seconds = String(timeLeft % 60).padStart(2, '0');
+const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(prevTime => {
-        if (prevTime <= 0) {
-          return 0; // Stop the countdown at 0
-        }
-        return prevTime - 1; // Decrease time left by 1 second
-      });
-    },1000);
-    return ()=> clearInterval(interval)
-  },[])
-  return (
-    // <div className='text-blue-600 '>
-    <div className={
-      cn(
-        "text-blue-600 flex items-center justify-center flex-row font-semibold",
-        timeLeft <= 1800 ? "text-red-600 dark:text-red-400" : "text-blue-600 dark:text-blue-400",
-      )
-    }>
-      <Clock className='mr-1 font-semibold' size={14}/>{hours}:{minutes}:{seconds}
-    </div>
-  )
-}
+    let interval: NodeJS.Timeout;
 
-export default CountDown
+    const fetchInitialTime = async () => {
+      if (!tagName) {
+        setTimeLeft(0);
+        return;
+      }
+      try {
+        const response = await axios.post("/api/client/getTag", { entryId, tagName });
+        const tagTimer = response.data.tagTimerVar;
+        if (!tagTimer || !tagTimer.startTime || tagTimer.countDownSec == null) {
+          setTimeLeft(0);
+          return;
+        }
+        // Calculate seconds elapsed since start
+        const start = new Date(tagTimer.startTime).getTime();
+        const now = Date.now();
+        const elapsed = Math.floor((now - start) / 1000);
+        const remaining = tagTimer.countDownSec - elapsed;
+        setTimeLeft(remaining > 0 ? remaining : 0);
+
+        // Start interval to update every second, but only after initial time is set
+        
+      } catch (error) {
+        console.error("Error fetching tag timer:", error);
+        setTimeLeft(0);
+      }
+    };
+
+    fetchInitialTime();
+    interval = setInterval(() => {
+          setTimeLeft(prev => {
+            if (prev <= 1) {
+              clearInterval(interval);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [entryId, tagName]);
+
+  const hours = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
+  const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
+  const seconds = String(timeLeft % 60).padStart(2, '0');
+
+  return (
+    <div className={cn(
+      "flex items-center justify-center flex-row font-semibold",
+      timeLeft === 0
+        ? "text-gray-500 dark:text-gray-400"
+        : timeLeft < 1800
+        ? "text-red-600 dark:text-red-400"
+        : "text-blue-600 dark:text-blue-400"
+    )}>
+      <Clock className='font-semibold mr-1' size={14}/>
+      {hours}:{minutes}:{seconds}
+    </div>
+  );
+};
+
+export default CountDown;

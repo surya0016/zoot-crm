@@ -61,7 +61,7 @@ export interface Entry {
   tag7?: string
   tag8?: string
   tags?: { [key: string]: string | null }[];
-  tagTimers?: any[];
+  tagTimers?: TagTimerProps[];
   createdAt?: string
   updatedAt?: string
 }
@@ -72,6 +72,18 @@ export interface ClientData {
   createdAt?: string
   entries?: null
   entry: Entry
+}
+
+export interface TagTimerProps {
+  id: string
+  countDownMins: number
+  clientEntryId: string
+  tagField: number // 1-8 for tag1 to tag8
+  // tagStatus: Status // Assuming you have a Status enum with ACTIVE, INACTIVE, etc.
+  tagValue: string
+  startTime: string
+  endTime?: string // Optional, if you want to track when the timer ends
+  createdAt?: string
 }
 
 export interface TagUpdateProps {
