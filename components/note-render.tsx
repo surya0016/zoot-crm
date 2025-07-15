@@ -41,4 +41,8 @@ const NoteRender = (props: NoteRenderProps) => {
   );
 }
 
+const AddNoteComponent = ({ note }: NoteRenderProps) => {
+  
+}
+
 export default NoteRender

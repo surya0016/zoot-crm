@@ -62,7 +62,7 @@ model TagTimer {
   startTime      DateTime
   endTime        DateTime?
   countDownSec   Int          @default(0)
-  tagStatus      Status       @default(in_progress)
+  tagStatus      Status       @default(none)
   createdAt      DateTime     @default(now())
 }
 
@@ -70,4 +70,5 @@ enum Status {
   in_progress
   completed
   overdue
+  none
 }

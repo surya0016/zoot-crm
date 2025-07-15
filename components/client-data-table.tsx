@@ -21,7 +21,7 @@ import StatusComponent from "./status-component";
 import AddClient from "./add-client";
 
 const ClientDataTable = () => {
-  const { clientData, error, loading, dataLoading, fetchClientData, updateTag } = useClientContext();
+  const { clientData, error, loading, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
   console.log("Client Tag Timer: ", clientData.map(c => c.entry?.tagTimers));
@@ -80,7 +80,7 @@ const ClientDataTable = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <div className="font-bold text-2xl">14 date</div>
+        <div className="font-bold text-2xl">CRM </div>
         <div className="">
           <AddClient/>
         </div>
@@ -114,7 +114,7 @@ const ClientDataTable = () => {
                 <TableCell className="border text-center"><NoteRender note={client.entry.note}/></TableCell>
                 <TableCell className="border text-center">{latestTag ? latestTag : "No Tag Selected"}</TableCell>
                 <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
-                <TableCell className="border text-center"><StatusComponent/></TableCell>
+                <TableCell className="border text-center"><StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/></TableCell>
                 {Array.from({ length: 8 }, (_, tagIndex) => (
                   <TableCell key={tagIndex} className="border text-center">
                     <TagsDropDown

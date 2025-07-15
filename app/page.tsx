@@ -9,12 +9,6 @@ export default function Home() {
     <div className="">
       <Header/>
       <main className=" p-4 lg:p-6 overflow-auto">
-        <div className="flex justify-between items-center mb-4">
-          <div className="font-bold text-2xl">{date} April</div>
-          <div className="">
-            <AddClient/>
-          </div>
-        </div>
         <ClientTable/>
       </main>
     </div>

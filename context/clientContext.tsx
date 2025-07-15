@@ -76,25 +76,25 @@ export function ClientContextProvider({children}:{children: ReactNode}){
   }
 
     const getTagTimer = async({ entryId, tagName }: {
-      entryId: string;
-      tagName: string;
-    }) => {
-    try {
-      setDataLoading(true)
-      setError(null)
-      const response = await axios.post('/api/client/getTag', {
-        entryId,
-        tagName
-      })
-      console.log("TagTimer Data: ", response.data)
-      return response.data.tagTimerVar;
-    } catch (error) {
-      console.error("Error in fetching TagTimer: ", error)
-      setError("Failed to fetch tag timer")
-    } finally {
-      setDataLoading(false)
+        entryId: string;
+        tagName: string;
+      }) => {
+      try {
+        setDataLoading(true)
+        setError(null)
+        const response = await axios.post('/api/client/getTag', {
+          entryId,
+          tagName
+        })
+        console.log("TagTimer Data: ", response.data)
+        return response.data.tagTimerVar;
+      } catch (error) {
+        console.error("Error in fetching TagTimer: ", error)
+        setError("Failed to fetch tag timer")
+      } finally {
+        setDataLoading(false)
+      }
     }
-  }
 
 
   useEffect(() => {

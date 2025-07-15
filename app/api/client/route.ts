@@ -7,9 +7,9 @@ type Tag = { [key: string]: any };
 export async function GET(){
   try {
     const clientsData = await db.client.findMany({
-      where:{
-        createdAt: new Date.now(), // Fetch clients created today
-      },
+      // where:{
+      //   createdAt: new Date().toISOString(), // Fetch clients created today
+      // },
       include:{
         entries: {
           include: {
