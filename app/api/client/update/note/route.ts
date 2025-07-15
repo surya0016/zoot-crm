@@ -1,21 +1,25 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  try {
-    const { id, newNote } = await req.json();
-    console.log(id, newNote);
-    const updatedNote = await db.clientEntry.update({
-      where:{ id },
-      data:{
-        note: newNote,
-        updatedAt: new Date().toISOString(),
-      }
-    });
-    console.log("Updated client note: ", updatedNote);
-    return NextResponse.json(updatedNote);
-  } catch (error) {
-    console.error("[UPDATE CLIENT NOTE API ERROR]: ", error);
-    return new NextResponse("Internal server error", { status: 500 });
+export async function POST(req: Request) {
+  const { id, oldNote, newNote } = await req.json();
+  if (!id || oldNote === undefined || newNote === undefined) {
+    return new NextResponse("Invalid request data", { status: 400 });
   }
+  const entry = await db.clientEntry.findUnique({
+    where: { id },
+    select: { note: true },
+  });
+  if (!entry || !entry.note) {
+    return new NextResponse("Entry not found", { status: 404 });
+  }
+  const updatedNotes = entry.note.map(n => n === oldNote ? newNote : n);
+  const updatedEntry = await db.clientEntry.update({
+    where: { id },
+    data: {
+      note: updatedNotes,
+      updatedAt: new Date().toISOString(),
+    },
+  });
+  return NextResponse.json(updatedEntry);
 }

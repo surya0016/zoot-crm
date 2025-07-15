@@ -19,11 +19,13 @@ import EditableInput from "./editable-input";
 import CountDown from "./countdown-timer";
 import StatusComponent from "./status-component";
 import AddClient from "./add-client";
+import AddNote from "./add-note";
 
 const ClientDataTable = () => {
   const { clientData, error, loading, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
+  const [openNoteEntryId, setOpenNoteEntryId] = useState<string | null>(null);
   console.log("Client Tag Timer: ", clientData.map(c => c.entry?.tagTimers));
   useEffect(() => {
     setClients(clientData || []);
@@ -111,7 +113,17 @@ const ClientDataTable = () => {
               <TableRow key={client.id} className="hover:bg-gray-100 dark:hover:bg-gray-800" >
                 <TableCell className="border text-center">{index+1}</TableCell>
                 <TableCell className="border text-center"><EditableInput value={client.name} id={client.id}/></TableCell>
-                <TableCell className="border text-center"><NoteRender note={client.entry.note}/></TableCell>
+                <TableCell
+                  className="border text-center"
+                  onDoubleClick={() => setOpenNoteEntryId(client.entry.id)}
+                >
+                  <AddNote
+                    clientNotes={client.entry.note || []}
+                    isAddnoteOpen={openNoteEntryId === client.entry.id}
+                    setIsAddNoteOpen={(isOpen) => setOpenNoteEntryId(isOpen ? client.entry.id : null)}
+                    entryId={client.entry.id}
+                  />
+                </TableCell>
                 <TableCell className="border text-center">{latestTag ? latestTag : "No Tag Selected"}</TableCell>
                 <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
                 <TableCell className="border text-center"><StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/></TableCell>

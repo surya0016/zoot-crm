@@ -1,5 +1,6 @@
 import { getClientData } from '@/actions/get-client-data'
 import ClientDataTable from '@/components/client-data-table'
+import NoteRender from '@/components/note-render'
 import React from 'react'
 
 const Page = async() => {
@@ -8,7 +9,6 @@ const Page = async() => {
   return (
     <div>
       <main className="flex-1 p-4 lg:p-6 overflow-auto">
-        <ClientDataTable/>
       </main>
     </div>
   )
