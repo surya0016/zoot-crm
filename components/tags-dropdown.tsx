@@ -26,9 +26,10 @@ interface TagsDropDownProps {
   updating?: boolean; // Optional prop to indicate if the dropdown is being updated
   currentStep: number;
   value?: string | null; // Add this to control the dropdown value
+  tagStatus?: string; // Optional prop to indicate the status of the tag
 }
 
-export function TagsDropDown({ onTagSelect, index, updating, isEnabled, currentStep, value }: TagsDropDownProps) {
+export function TagsDropDown({ onTagSelect, index, tagStatus, updating, isEnabled, currentStep, value }: TagsDropDownProps) {
   const [open, setOpen] = React.useState(false)
   const [internalValue, setInternalValue] = React.useState("")
 
@@ -47,7 +48,8 @@ export function TagsDropDown({ onTagSelect, index, updating, isEnabled, currentS
             disabled={!isEnabled || updating}
             className={cn(
               "min-w-[200px] max-w-[400px] w-fit justify-between",
-              index < currentStep && displayValue !== null ? "border-blue-400 dark:border-blue-700" : "",
+              tagStatus === "completed" ? "dark:border-green-900 border-green-400" :
+              tagStatus === "overdue" ? "dark:border-red-900 border-red-400" :
               !isEnabled ? "opacity-30 cursor-not-allowed" : ""
             )}
           >

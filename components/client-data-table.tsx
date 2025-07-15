@@ -101,7 +101,6 @@ const ClientDataTable = () => {
                   Tag {index + 1}
                 </TableHead>
               ))}
-              <TableHead className="border-x border-t  text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
         <TableBody>
@@ -132,6 +131,7 @@ const ClientDataTable = () => {
                     <TagsDropDown
                       index={tagIndex}
                       value={clientTagsArray[tagIndex]}
+                      tagStatus={client.entry.tagTimers?.find(timer => timer.tagField === tagIndex + 1)?.tagStatus || "inactive"}
                       isEnabled={tagIndex === currentStep || tagIndex < currentStep}
                       onTagSelect={(tag) =>{
                         handleTagChange({ entryId: client.entry.id, tagIndex: tagIndex, tag})
@@ -140,7 +140,6 @@ const ClientDataTable = () => {
                     />
                   </TableCell>
                 ))}
-                <TableCell className="border text-center"><Button><Trash2/></Button></TableCell>
               </TableRow>)    
             })}
         </TableBody>
