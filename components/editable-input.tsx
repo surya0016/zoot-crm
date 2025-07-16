@@ -66,7 +66,7 @@ const EditableInput = ({
           </form>
         </div>
       ):(
-        <div className="" onClick={() => {
+        <div className="font-semibold" onClick={() => {
           setIsEditing(true)}}>
           {name}
         </div>

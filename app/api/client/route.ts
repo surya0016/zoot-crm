@@ -4,20 +4,32 @@ import { NextResponse } from "next/server";
 
 type Tag = { [key: string]: any };
 
-export async function GET(){
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const dateParam = url.searchParams.get("date");
+  let where = {};
+  if (dateParam) {
+    // dateParam is "2025-07-16"
+    const start = new Date(dateParam + "T00:00:00.000Z");
+    const end = new Date(dateParam + "T23:59:59.999Z");
+    where = {
+      createdAt: {
+        gte: start,
+        lte: end,
+      },
+    };
+  }
   try {
     const clientsData = await db.client.findMany({
-      // where:{
-      //   createdAt: new Date().toISOString(), // Fetch clients created today
-      // },
-      include:{
+      where,
+      include: {
         entries: {
           include: {
             tagTimers: true,
           },
         },
       },
-    })
+    });
 
     const clients = clientsData.map((clientData) => {
       const entry = clientData.entries[0] || null;
@@ -36,29 +48,40 @@ export async function GET(){
         ];
         tagTimers = (entry.tagTimers || []).map((timer: any) => ({
           ...timer,
-          createdAt: timer.createdAt instanceof Date ? timer.createdAt.toISOString() : timer.createdAt,
-          startTime: timer.startTime instanceof Date ? timer.startTime.toISOString() : timer.startTime,
-          endTime: timer.endTime instanceof Date ? timer.endTime.toISOString() : timer.endTime,
+          createdAt:
+            timer.createdAt instanceof Date
+              ? timer.createdAt.toISOString()
+              : timer.createdAt,
+          startTime:
+            timer.startTime instanceof Date
+              ? timer.startTime.toISOString()
+              : timer.startTime,
+          endTime:
+            timer.endTime instanceof Date
+              ? timer.endTime.toISOString()
+              : timer.endTime,
         }));
       }
       return {
         ...clientData,
-        entry: entry
-          ? {
-              ...entry,
-              tags,
-              tagTimers,
-            }
-          : null,
+        entry:
+          entry && {
+            ...entry,
+            tags,
+            tagTimers,
+          },
         entries: null,
       };
     });
-    console.log("Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:", clients.map(c => c.entry?.tagTimers)); 
+    console.log(
+      "Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:",
+      clients.map((c) => c.entry?.tagTimers)
+    );
     return NextResponse.json({
-      clients
+      clients,
     });
   } catch (error) {
     console.error("[GET CLIENT API ERROR]: ", error);
-    return new NextResponse("Internal server error",{status:500})
+    return new NextResponse("Internal server error", { status: 500 });
   }
 }

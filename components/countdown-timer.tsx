@@ -22,7 +22,7 @@ const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
         return;
       }
       try {
-        const response = await axios.post("/api/client/getTag", { entryId, tagName });
+        const response = await axios.post("/api/client/get/tag", { entryId, tagName });
         const tagTimer = response.data.tagTimerVar;
         if (!tagTimer || !tagTimer.startTime || tagTimer.countDownSec == null) {
           setTimeLeft(0);

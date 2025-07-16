@@ -46,7 +46,7 @@ const textToUrl = (text: string) => {
 const NoteRender = (props: NoteRenderProps) => {
   const { note } = props;
   if (!note || note.length === 0) {
-    return <div>No notes available</div>;
+    return <div className='font-bold text-gray-400'>No notes available</div>;
   }
   return (
     <div>

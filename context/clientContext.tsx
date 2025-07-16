@@ -31,7 +31,11 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 
   const fetchClientData = async () => {
     try {
-      const response = await axios.get('/api/client')
+      const response = await axios.get('/api/client', {
+        params: {
+          date: new Date().toISOString().slice(0, 10) // "2025-07-16"
+        }
+      })
       if (response.status === 200) {
         console.log("Client Data Fetched: ", response.data.clients) 
         setClientData(response.data.clients)
@@ -82,7 +86,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
       try {
         setDataLoading(true)
         setError(null)
-        const response = await axios.post('/api/client/getTag', {
+        const response = await axios.post('/api/client/get/tag', {
           entryId,
           tagName
         })
