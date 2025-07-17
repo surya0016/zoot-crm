@@ -10,19 +10,17 @@ import {
 } from "@/components/ui/table"
 import { useClientContext } from '@/context/clientContext';
 import { useEffect, useState } from 'react'
-import NoteRender from "./note-render";
 import { TagsDropDown } from "./tags-dropdown";
 import { TagUpdateProps } from "@/lib/types";
-import { Button } from "./ui/button";
-import { Trash2 } from "lucide-react";
 import EditableInput from "./editable-input";
 import CountDown from "./countdown-timer";
 import StatusComponent from "./status-component";
 import AddClient from "./add-client";
 import AddNote from "./add-note";
+import { dateFormatter } from "@/lib/utils";
 
 const ClientDataTable = () => {
-  const { clientData, error, loading, updateTag } = useClientContext();
+  const { selectedDate, clientData, error, loading, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
   const [openNoteEntryId, setOpenNoteEntryId] = useState<string | null>(null);
@@ -82,12 +80,13 @@ const ClientDataTable = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <div className="font-bold text-2xl">CRM </div>
+        <div className="font-bold text-2xl">{dateFormatter(selectedDate)}</div>
         <div className="">
           <AddClient/>
         </div>
       </div>
-      <Table>
+      {clientData.length === 0 ? (
+        <Table className="overflow-x-scroll">
         <TableHeader>
             <TableRow>
               <TableHead className="border-l border-t text-center font-bold">No.</TableHead>
@@ -97,7 +96,32 @@ const ClientDataTable = () => {
               <TableHead className="border-l border-t text-center font-bold min-w-25">Timer</TableHead>
               <TableHead className="border-l border-t text-center font-bold">Status</TableHead>
               {Array.from({ length: 8 }, (_, index) => (
-                <TableHead key={index} className="border-l border-t text-center font-bold">
+                <TableHead key={index} className="border-l border-r-1 border-t text-center font-bold">
+                  Tag {index + 1}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell colSpan={14} className="text-2xl text-center py-12 border text-zinc-400">
+              No clients found for {dateFormatter(selectedDate)}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+        </Table>
+      ) : (
+        <Table className="overflow-x-scroll">
+        <TableHeader>
+            <TableRow>
+              <TableHead className="border-l border-t text-center font-bold">No.</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Client Name</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Note/Link</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Latest Tag</TableHead>
+              <TableHead className="border-l border-t text-center font-bold min-w-25">Timer</TableHead>
+              <TableHead className="border-l border-t text-center font-bold">Status</TableHead>
+              {Array.from({ length: 8 }, (_, index) => (
+                <TableHead key={index} className="border-l border-r-1 border-t text-center font-bold">
                   Tag {index + 1}
                 </TableHead>
               ))}
@@ -127,7 +151,7 @@ const ClientDataTable = () => {
                 <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
                 <TableCell className="border text-center"><StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/></TableCell>
                 {Array.from({ length: 8 }, (_, tagIndex) => (
-                  <TableCell key={tagIndex} className="border text-center">
+                  <TableCell key={tagIndex} className="border text-center border-r-1">
                     <TagsDropDown
                       index={tagIndex}
                       value={clientTagsArray[tagIndex]}
@@ -143,7 +167,9 @@ const ClientDataTable = () => {
               </TableRow>)    
             })}
         </TableBody>
-      </Table>
+        </Table>
+      )
+      }
     </div>
   )
 }

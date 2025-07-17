@@ -9,7 +9,7 @@ interface ClientContextProps {
   loading: boolean
   dataLoading: boolean
   error: string | null
-  fetchClientData: () => void
+  fetchClientData: (date:string) => void
   addClient: (clientName: string) => void
   updateClient?: (clientId: string, updatedData: Partial<ClientData>) => void
   addNote?: (clientId: string, note: string) => void
@@ -19,21 +19,24 @@ interface ClientContextProps {
     entryId: string;  
     tagName: string;
   }) => void
+  setSelectedDate: (date: string) => void
+  selectedDate: string
 }
 
 const ClientContext = createContext<ClientContextProps | null>(null)
 
 export function ClientContextProvider({children}:{children: ReactNode}){
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 10)) // Default to today
   const [clientData, setClientData] = useState<ClientData[]>()
   const [loading, setLoading] = useState(false)
   const [dataLoading, setDataLoading] = useState(false)
   const [error, setError] = useState<string|null>(null)
 
-  const fetchClientData = async () => {
+  const fetchClientData = async (date:string) => {
     try {
       const response = await axios.get('/api/client', {
         params: {
-          date: new Date().toISOString().slice(0, 10) // "2025-07-16"
+          date: selectedDate
         }
       })
       if (response.status === 200) {
@@ -53,7 +56,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
   const addClient = async (clientName: string) => {
     try {
       const response = await axios.post('/api/client/create', { name: clientName })
-      await fetchClientData(); // Always refresh from backend
+      await fetchClientData(selectedDate); // Always refresh from backend
     } catch (error) {
       console.error("Error in addClient: ", error)
       setError("Failed to add client")
@@ -70,7 +73,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
         tag
       })
       console.log("Tag updated successfully: ", response.data)
-      await fetchClientData() // Refresh client data after update
+      await fetchClientData(selectedDate) // Refresh client data after update
     } catch (error) {
       console.error("Error in updateTag: ", error)
       setError("Failed to update tag")
@@ -103,8 +106,15 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 
   useEffect(() => {
     setLoading(true)
-    fetchClientData()
-  },[])
+    fetchClientData(selectedDate)
+  },[selectedDate])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchClientData(selectedDate);
+    }, 60000); // every 60 seconds
+    return () => clearInterval(interval);
+  }, [selectedDate]);
 
   const value: ClientContextProps = {
     clientData: clientData || [], 
@@ -115,6 +125,8 @@ export function ClientContextProvider({children}:{children: ReactNode}){
     addClient,
     updateTag,
     getTagTimer,
+    setSelectedDate,
+    selectedDate,
   }
 
   return (

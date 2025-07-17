@@ -3,8 +3,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { SidebarMenuButton } from "./ui/sidebar";
+import { dateFormatter } from "@/lib/utils";
+import { useClientContext } from "@/context/clientContext";
 
 export default function DateList() {
+  const { setSelectedDate } = useClientContext();
   const [dates, setDates] = useState<string[]>([]);
   const router = useRouter();
 
@@ -18,14 +22,14 @@ export default function DateList() {
 
   return (
     <div className="flex gap-2 flex-wrap">
+        
       {dates.map(date => (
-        <button
+        <SidebarMenuButton
           key={date}
-          className="px-3 py-1 rounded border bg-gray-100 hover:bg-blue-100"
-          onClick={() => router.push(`/clients?date=${date}`)}
-        >
-          {date}
-        </button>
+          onClick={() => setSelectedDate(date)}
+          >
+          {dateFormatter(date)}
+        </SidebarMenuButton>
       ))}
     </div>
   );

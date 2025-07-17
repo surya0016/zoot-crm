@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ClientContextProvider } from "@/context/clientContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import Header from "@/components/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,19 +31,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
         <head />
         <body>          
-          <SidebarProvider>
-            <AppSidebar />
-            <ClientContextProvider>
+          <ClientContextProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"
                 enableSystem
                 disableTransitionOnChange
               >
-                {children}
+                <SidebarProvider>
+                  {children}
+                </SidebarProvider>
               </ThemeProvider>
-            </ClientContextProvider>
-          </SidebarProvider>
+          </ClientContextProvider>
         </body>
       </html>
   );

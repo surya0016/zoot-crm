@@ -14,7 +14,6 @@ export async function PUT(req: Request) {
     const tagValue = tag ? tag.label : null; // Use label for the tag value
     const tagTime = tag ? tag.value : null; // Use time if available
 
-
     const createTagTimer = await db.tagTimer.create({
       data: {
         tagValue,

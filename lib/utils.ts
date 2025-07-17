@@ -54,3 +54,26 @@ export function getSecondsSpent(startTime: string) {
   const diffSecs = Math.floor(diffMs / 1000); // convert to seconds
   return diffSecs;
 }
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+
+export function dateFormatter (date:string) {
+  const dateArr = date.split("-");
+  const year = dateArr[0];
+  const month = months[parseInt(dateArr[1], 10) - 1];
+  const day = parseInt(dateArr[2], 10);
+  return `${month} ${day}, ${year}`;
+}

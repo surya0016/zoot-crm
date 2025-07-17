@@ -9,43 +9,12 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
-import DateList from "./date-list"
+import DateList from "@/components/date-list"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
 
 export function AppSidebar() {
   const [dates, setDates] = useState<string[]>([]);
@@ -60,8 +29,6 @@ export function AppSidebar() {
     fetchDates();
   }, []);
   return (
-    <Sidebar>
-      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Daily Logs</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -72,7 +39,5 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
   )
 }   
