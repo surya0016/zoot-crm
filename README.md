@@ -77,17 +77,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
   /prisma           # Prisma schema and migrations
   /utils/supabase   # Supabase client/server utilities
 ```
----
-## 🤝 Contributing
 
-Pull requests and issues are welcome! Please open an issue to discuss your ideas or report bugs.
-
----
-
-## 📄 License
-
-MIT
-
----
-
-**Made with ❤️ using Next.js, Prisma, and
