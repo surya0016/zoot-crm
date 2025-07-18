@@ -4,12 +4,10 @@ import NoteRender from '@/components/note-render'
 import React from 'react'
 
 const Page = async() => {
-  const data = await getClientData()
-  console.log("Client Data:", data)
   return (
-    <div>
-      <main className="flex-1 p-4 lg:p-6 overflow-auto">
-      </main>
+    <div className='flex justify-between items-center w-full'>
+      <div className="">Jagdish</div>
+      <div className="">Surya</div>
     </div>
   )
 }

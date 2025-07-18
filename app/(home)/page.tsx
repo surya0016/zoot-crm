@@ -1,17 +1,22 @@
-"use client"
-
 import ClientTable from "@/components/client-data-table";
-import Header from "@/components/header";
-import { DarkMode } from "@/components/ui/dark-mode-toggle";
-import { useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import ClientDataTableError from "@/components/client-data-table-error";
+import ErrorPage from "@/components/client-data-table-error";
 
-export default function Home() {
-  const searchParams = useSearchParams()
-  const date = searchParams.get('date'); // Default to today if no date is provided
+export default async function Home() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getClaims();
+  console.log("User Claims: ", data?.claims);
+  if (error || !data?.claims) {
+    redirect("/auth/login");
+  }// Default to today if no date is provided
+
   return (
     <div className="">
       <main className="p-4 lg:p-6">
-        <ClientTable/>
+        <ClientTable />
       </main>
     </div>
   );

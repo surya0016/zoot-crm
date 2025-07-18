@@ -22,6 +22,7 @@ const HomeNavbar = () => {
         {/* Authentication button */}
         <div className="flex-shrink-0 items-center flex gap-4">
           <DarkMode/>
+          <AuthButton/>
         </div>
       </div>
     </nav>
@@ -33,6 +34,7 @@ export default HomeNavbar
 import { Bell, Menu, Search, Settings, Users } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { DarkMode } from '@/components/ui/dark-mode-toggle'
+import { AuthButton } from '@/components/auth/auth-button'
 
 const Header = () => {
   return (

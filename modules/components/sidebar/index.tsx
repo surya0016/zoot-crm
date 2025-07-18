@@ -1,9 +1,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
 } from "@/components/ui/sidebar"
 import { AppSidebar } from "./main-section"
 

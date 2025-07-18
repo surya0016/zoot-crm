@@ -77,3 +77,7 @@ export function dateFormatter (date:string) {
   const day = parseInt(dateArr[2], 10);
   return `${month} ${day}, ${year}`;
 }
+
+export const hasEnvVars =
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

@@ -209,7 +209,7 @@ export const tags = [
   },
   {
     value: "120",
-    label: "aishwarya zoom sheet updated"
+    label: "aishwarya zoom sheet updating"
   },
   {
     value: "720",

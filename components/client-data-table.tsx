@@ -18,6 +18,8 @@ import StatusComponent from "./status-component";
 import AddClient from "./add-client";
 import AddNote from "./add-note";
 import { dateFormatter } from "@/lib/utils";
+import ClientDataTableLoader from "./client-data-table-loader";
+import ErrorPage from "./client-data-table-error";
 
 const ClientDataTable = () => {
   const { selectedDate, clientData, error, loading, updateTag } = useClientContext();
@@ -70,11 +72,13 @@ const ClientDataTable = () => {
   };
 
   if (error) {
-    return <div>Error loading clients: {error}</div>
+    return <ErrorPage errorMessage={error} />;
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>
+      <ClientDataTableLoader/>
+    </div>
   }
 
   return (
