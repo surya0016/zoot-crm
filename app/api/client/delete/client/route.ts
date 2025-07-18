@@ -13,9 +13,8 @@ export async function POST(req: Request) {
     const client = await db.client.delete({
       where: { id },
     });
-
     
-    console.log("Deleted client : ", client);
+    console.log("Deleted client ");
     return NextResponse.json(client);
   } catch (error) {
     console.error("[DELETE CLIENT API ERROR]: ", error);

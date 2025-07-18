@@ -8,7 +8,6 @@ export async function POST(req: Request) {
       console.error("Invalid request data", { id, noteToDelete });
       return new NextResponse("Invalid request data", { status: 400 });
     }
-    console.log(id, noteToDelete);
 
     // Fetch existing notes
     const entry = await db.clientEntry.findUnique({
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
         updatedAt: new Date().toISOString(),
       },
     });
-    console.log("Deleted client note: ", updatedEntry);
+    console.log("Deleted client note");
     return NextResponse.json(updatedEntry);
   } catch (error) {
     console.error("[DELETE CLIENT NOTE API ERROR]: ", error);

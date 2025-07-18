@@ -5,10 +5,8 @@ export async function POST(req: Request) {
   const { id, newNote } = await req.json();
   try {
     if (!id || !newNote) {
-      console.error("Invalid request data", { id, newNote });
       return new NextResponse("Invalid request data", { status: 400 });
     }
-    console.log(id, newNote);
 
     // Fetch existing notes
     const entry = await db.clientEntry.findUnique({
@@ -25,7 +23,7 @@ export async function POST(req: Request) {
         updatedAt: new Date().toISOString(),
       },
     });
-    console.log("Updated client note: ", createNote);
+    console.log("Updated client note");
     return NextResponse.json(createNote);
   } catch (error) {
     console.error("[UPDATE CLIENT NOTE API ERROR]: ", error);

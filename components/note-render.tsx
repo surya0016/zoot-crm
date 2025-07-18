@@ -1,4 +1,4 @@
-import { CopyIcon, Globe, Pencil } from 'lucide-react';
+import { CopyIcon, Globe } from 'lucide-react';
 import React from 'react'
 import {
   HoverCard,

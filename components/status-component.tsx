@@ -1,8 +1,6 @@
 import { useClientContext } from '@/context/clientContext';
 import { Status } from '@prisma/client'
-import axios from 'axios'
-import { get } from 'http';
-import { Check, ClockAlert, Cross, Hourglass, X } from 'lucide-react'
+import { Hourglass } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 interface StatusComponentProps {
@@ -11,7 +9,7 @@ interface StatusComponentProps {
 }
 
 const StatusComponent = ({entryId, tagName}: StatusComponentProps) => {
-  const { getTagTimer, clientData } = useClientContext();
+  const { clientData } = useClientContext();
   const [status, setStatus] = useState<Status>('none')
   const fetchStatus = async () => {
     clientData.map((client)=>{

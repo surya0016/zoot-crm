@@ -26,15 +26,14 @@ const ClientDataTable = () => {
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
   const [openNoteEntryId, setOpenNoteEntryId] = useState<string | null>(null);
-  console.log("Client Tag Timer: ", clientData.map(c => c.entry?.tagTimers));
   useEffect(() => {
     setClients(clientData || []);
-    console.log("Client Data Updated: ", clientData);
+    console.log("Client Data Updated");
     console.log(!clientTags[0])
   }, [clientData])
 
   useEffect(()=>{
-    console.log("Client Tags Updated: ", clientTags);
+    console.log("Client Tags Updated");
   },[clientTags])
 
   const getLatestTag = (clientId: string) => {

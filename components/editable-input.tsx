@@ -27,7 +27,7 @@ const EditableInput = ({
         id,
         newName: name
       })
-      console.log("Name updated successfully: ", response.data)
+      console.log("Name updated successfully")
     } catch (error) {
       console.error("Error updating client name:", error);
     } finally {

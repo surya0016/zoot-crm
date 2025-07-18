@@ -49,7 +49,7 @@ export async function PUT(req: Request) {
           endTime: new Date().toISOString(),
         },
       });
-      console.log("Updated previous tag timer: ", updatePreviousTagTimer);
+      console.log("Updated previous tag timer");
     }
 
     
@@ -83,7 +83,7 @@ export async function PUT(req: Request) {
       }
     }
 
-    console.log("Updated Entry: ", updatedEntry);
+    console.log("Updated Entry");
     return NextResponse.json(updatedEntry);
   } catch (error) {
     console.error("[UPDATE CLIENT TAG API ERROR]: ", error, tag);

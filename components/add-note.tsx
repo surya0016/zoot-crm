@@ -39,7 +39,7 @@ const AddNote = ({entryId, clientNotes, isAddnoteOpen, setIsAddNoteOpen}:AddNote
       if (response.status !== 200) {
         console.error("Failed to add note", response.data);
       }
-      console.log("Note added successfully", response.data);
+      console.log("Note added successfully");
     }
   }
   const handleDeleteNote = async (note: string) => {
@@ -51,7 +51,7 @@ const AddNote = ({entryId, clientNotes, isAddnoteOpen, setIsAddNoteOpen}:AddNote
     if (response.status !== 200) {
       console.error("Failed to delete note", response.data);
     }
-    console.log("Note deleted successfully", response.data);
+    console.log("Note deleted successfully");
   }
   const handleEditStart = (idx: number, value: string) => {
     setEditIdx(idx);

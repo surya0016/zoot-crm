@@ -1,10 +1,6 @@
 "use client";
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
-
 import {
-  Sidebar,
-  SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -12,22 +8,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import DateList from "@/components/date-list"
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 
 export function AppSidebar() {
-  const [dates, setDates] = useState<string[]>([]);
-  const router = useRouter();
-  
-  useEffect(() => {
-    async function fetchDates() {
-      const res = await axios.get("/api/client/get/date");
-      console.log("Fetched dates [app-sidebar.tsx]: ", res.data.dates);
-      setDates(res.data.dates);
-    }
-    fetchDates();
-  }, []);
   return (
         <SidebarGroup>
           <SidebarGroupLabel>Daily Logs</SidebarGroupLabel>

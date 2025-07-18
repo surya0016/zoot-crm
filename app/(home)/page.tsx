@@ -1,8 +1,6 @@
 import ClientTable from "@/components/client-data-table";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import ClientDataTableError from "@/components/client-data-table-error";
-import ErrorPage from "@/components/client-data-table-error";
 
 export default async function Home() {
   const supabase = await createClient();

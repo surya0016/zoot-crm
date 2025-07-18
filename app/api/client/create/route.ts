@@ -18,10 +18,13 @@ export async function POST(req: Request){
         clientId: client.id, 
       }
     })
+    console.log("Created client");
+     
     return NextResponse.json({
       client,
       clientEntry
     })
+
   } catch (error) {
     console.log("[CREATE CLIENT API]: ", error)
     return new NextResponse("Internal Error",{status:500})

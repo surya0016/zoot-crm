@@ -1,10 +1,9 @@
 import React from 'react'
 import { Button } from './ui/button'
-import { Bell, Menu, Search, Settings, Users } from 'lucide-react'
+import { Menu, Search, Users } from 'lucide-react'
 import { Input } from './ui/input'
 import { DarkMode } from './ui/dark-mode-toggle'
 import { SidebarTrigger } from './ui/sidebar'
-import { Separator } from './ui/separator'
 
 const Header = () => {
   return (

@@ -74,8 +74,7 @@ export async function GET(req: Request) {
       };
     });
     console.log(
-      "Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:",
-      clients.map((c) => c.entry?.tagTimers)
+      "Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:",clients.length === 0 ? "No clients found" : `${clients.length} clients found`
     );
     return NextResponse.json({
       clients,

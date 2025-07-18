@@ -46,7 +46,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
         }
       })
       if (response.status === 200) {
-        console.log("Client Data Fetched: ", response.data.clients) 
+        console.log("Client Data Fetched") 
         setClientData(response.data.clients)
         setLoading(false)
         setError(null)
@@ -78,7 +78,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
         tagIndex,
         tag
       })
-      console.log("Tag updated successfully: ", response.data)
+      console.log("Tag updated successfully")
       await fetchClientData(selectedDate) // Refresh client data after update
     } catch (error) {
       console.error("Error in updateTag: ", error)

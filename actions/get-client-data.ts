@@ -42,7 +42,7 @@ export async function updateClientTags({entryId, tagIndex, tag}:TagUpdateProps) 
           },
         }
       })
-      console.log("Updated Entry: ", updatedEntry);
+      console.log("Updated Entry");
       return updatedEntry;
     } catch (error) {
       console.error("[UPDATE CLIENT ACTION ERROR]: ", error);
