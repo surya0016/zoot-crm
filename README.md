@@ -1,4 +1,4 @@
-# 🦁 Zoot CRM
+# Zoot CRM
 
 Zoot CRM is a modern, full-stack Customer Relationship Management (CRM) application built with [Next.js](https://nextjs.org), [Prisma](https://www.prisma.io/), [Supabase](https://supabase.com/), and [React Context](https://react.dev/reference/react/createContext). It features robust client management, date-based filtering, tag tracking, note-taking, and real-time-like updates for a seamless user experience.
 
@@ -77,38 +77,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
   /prisma           # Prisma schema and migrations
   /utils/supabase   # Supabase client/server utilities
 ```
-
 ---
-
-## 🔒 Security
-
-- All sensitive API routes are protected by Supabase authentication.
-- Supabase Row Level Security (RLS) is recommended for all tables.
-- Never expose your service role key or secrets in the frontend.
-
----
-
-## 📝 Customization
-
-- **Tags & Statuses:** Edit `/lib/data.ts` and Prisma schema to customize tags and statuses.
-- **UI:** Modify components in `/components` for your branding and workflow.
-- **Authentication:** Extend with roles or permissions as needed.
-
----
-
-## 🧪 Testing
-
-Add tests for your API routes, context logic, and components for a robust production deployment.
-
----
-
-## 📦 Deployment
-
-Deploy easily on [Vercel](https://vercel.com/) or your preferred platform.  
-See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
-
----
-
 ## 🤝 Contributing
 
 Pull requests and issues are welcome! Please open an issue to discuss your ideas or report bugs.
