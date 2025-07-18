@@ -1,7 +1,14 @@
 import { db } from "@/lib/db";
+import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+  const supabase = await createClient()
+  const user = await supabase.auth.getUser();
+
+  if (!user.data.user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
   const { id, noteToDelete } = await req.json();
   try {
     if (!id || noteToDelete === undefined) {

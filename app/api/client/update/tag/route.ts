@@ -1,9 +1,16 @@
 import { doneTags } from "@/lib/data";
 import { db } from "@/lib/db";
+import { createClient } from "@/utils/supabase/server";
 import { Status } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request) {
+  const supabase = await createClient()
+  const user = await supabase.auth.getUser();
+
+  if (!user.data.user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
   console.log("Updating client tag...");
   const { entryId, tagIndex, tag } = await req.json();
   try {

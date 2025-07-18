@@ -1,10 +1,17 @@
 import { db } from "@/lib/db";
 import { TagTimerProps } from "@/lib/types";
+import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 type Tag = { [key: string]: any };
 
 export async function GET(req: Request) {
+  const supabase = await createClient()
+  const user = await supabase.auth.getUser();
+
+  if (!user.data.user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
   const url = new URL(req.url);
   const dateParam = url.searchParams.get("date");
   let where = {};
