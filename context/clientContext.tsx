@@ -3,9 +3,6 @@
 import { ClientData, TagUpdateProps } from "@/lib/types"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import axios from "axios"
-import { createClient } from "@/utils/supabase/client"
-import { useRouter } from "next/navigation"
-
 interface ClientContextProps {
   clientData: ClientData[]
   loading: boolean
@@ -26,9 +23,6 @@ interface ClientContextProps {
 }
 
 const ClientContext = createContext<ClientContextProps | null>(null)
-
-const supabase = createClient();
-const { data, error } = await supabase.auth.getClaims();
 
 export function ClientContextProvider({children}:{children: ReactNode}){
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 10)) // Default to today
@@ -99,7 +93,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
           entryId,
           tagName
         })
-        console.log("TagTimer Data: ", response.data)
+        console.log("TagTimer Data")
         return response.data.tagTimerVar;
       } catch (error) {
         console.error("Error in fetching TagTimer: ", error)
@@ -143,15 +137,9 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 }
 
 export const useClientContext = () => {
-  const route = useRouter()
   const context = useContext(ClientContext)
   if (!context) {
     throw new Error("useClientContext must be used within a ClientContextProvider")
   }
-
-  if(!data || !data.claims.session_id) {
-    route.push('/auth/login')
-  }
-  
   return context
 }
