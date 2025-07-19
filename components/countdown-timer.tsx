@@ -12,8 +12,15 @@ interface CountDownProps {
 
 const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; // Only run timer logic on client
+
     let interval: NodeJS.Timeout;
 
     const fetchInitialTime = async () => {
@@ -34,9 +41,6 @@ const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
         const elapsed = Math.floor((now - start) / 1000);
         const remaining = tagTimer.countDownSec - elapsed;
         setTimeLeft(remaining > 0 ? remaining : 0);
-
-        // Start interval to update every second, but only after initial time is set
-        
       } catch (error) {
         console.error("Error fetching tag timer:", error);
         setTimeLeft(0);
@@ -44,19 +48,21 @@ const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
     };
 
     fetchInitialTime();
+
     interval = setInterval(() => {
-          setTimeLeft(prev => {
-            if (prev <= 1) {
-              clearInterval(interval);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [entryId, tagName]);
+  }, [entryId, tagName, mounted]);
 
   const hours = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
   const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');

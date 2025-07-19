@@ -26,7 +26,7 @@ const TextToLink = ({text}: {text:string}) => {
           )
         ))}
         <span
-          className="text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
+          className="text-blue-600 hover:text-blue-800 underline flex items-center gap-1 "
         >
           {url}
         </span>
@@ -51,34 +51,36 @@ const NoteRender = (props: NoteRenderProps) => {
   return (
     <div>
       {note.map((n, idx) => (
-          <HoverCard key={idx}>
-            <HoverCardTrigger asChild>
-              <span className="flex items-center gap-1">
-                <TextToLink text={n} />
+        <HoverCard key={idx}>
+          <HoverCardTrigger asChild>
+            <span
+              className="flex items-center gap-1 max-w-[180px] truncate cursor-pointer"
+              title={n} // fallback for native tooltip
+            >
+              <TextToLink text={n} />
+            </span>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-full text-sm">
+            <div className="flex items-center gap-2">
+              <span className=""><Globe size={14}/></span>
+              <span className="">
+                <a
+                  key={idx}
+                  href={textToUrl(n) || ""}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
+                >
+                  {textToUrl(n) || n}
+                </a>
               </span>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-full text-sm">
-              <div className="flex items-center gap-2">
-                <span className=""><Globe size={14}/></span>
-                <span className="">
-                  <a
-                    key={idx}
-                    href={textToUrl(n) || ""}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
-                  >
-                    {textToUrl(n) || n}
-                  </a>
-                </span>
-                <span className="cursor-pointer" onClick={
-                  () => navigator.clipboard.writeText(textToUrl(n) || n)
-                }><CopyIcon size={14}/></span>             
-              </div>
-            </HoverCardContent>
-          </HoverCard>
-        ) 
-      )}
+              <span className="cursor-pointer" onClick={
+                () => navigator.clipboard.writeText(textToUrl(n) || n)
+              }><CopyIcon size={14}/></span>             
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ))}
     </div>
   );
 }
