@@ -12,16 +12,10 @@ interface CountDownProps {
 
 const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return; // Only run timer logic on client
-
     let interval: NodeJS.Timeout;
+    let pollInterval: NodeJS.Timeout;
 
     const fetchInitialTime = async () => {
       if (!tagName) {
@@ -35,7 +29,6 @@ const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
           setTimeLeft(0);
           return;
         }
-        // Calculate seconds elapsed since start
         const start = new Date(tagTimer.startTime).getTime();
         const now = Date.now();
         const elapsed = Math.floor((now - start) / 1000);
@@ -50,19 +43,19 @@ const CountDown: React.FC<CountDownProps> = ({ entryId, tagName }) => {
     fetchInitialTime();
 
     interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
+    // Optional: Poll backend every 30 seconds to stay in sync
+    pollInterval = setInterval(() => {
+      fetchInitialTime();
+    }, 30000);
+
     return () => {
-      if (interval) clearInterval(interval);
+      clearInterval(interval);
+      clearInterval(pollInterval);
     };
-  }, [entryId, tagName, mounted]);
+  }, [entryId, tagName]);
 
   const hours = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
   const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
