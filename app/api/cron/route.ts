@@ -1,18 +1,13 @@
 import { db } from "@/lib/db";
-import cron from "node-cron";
+import { NextRequest, NextResponse } from "next/server";
 
-console.log("Running scheduled task to update overdue tag timers...");
-cron.schedule("* * * * *",async () => {
-  try {
-    console.log("Running scheduled task to update overdue tag timers...");
-    await updateOverdueTagTimers();
-    console.log("Overdue tag timers updated successfully.");
-  } catch (error) {
-    console.error("Error updating overdue tag timers:", error);
+export default async function handler(req: NextRequest){
+  const secret = req.headers.get("x-cron-secret");
+  if (secret !== process.env.CRON_SECRET) {
+    return new NextResponse("Unauthorized", { status: 401 });
   }
-})
 
-const updateOverdueTagTimers = async () => {
+  const updateOverdueTagTimers = async () => {
   const tagTimers = await db.tagTimer.findMany({
     where: {
       endTime: null,
@@ -29,7 +24,10 @@ const updateOverdueTagTimers = async () => {
       await db.tagTimer.update({
         where: { id: timer.id },
         data: { tagStatus: 'overdue' },
-      });
+        });
+      }
     }
+
+  return new NextResponse("Cron job executed", { status: 200 });
   }
 }
