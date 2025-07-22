@@ -1,0 +1,35 @@
+# .github/workflows/update-timers.yml
+name: Update Overdue Timers
+
+on:
+  schedule:
+    # Runs every minute (adjust as needed)
+    - cron: '* * * * *'
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  update-timers:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Generate Prisma client
+        run: npx prisma generate
+        
+      - name: Run timer update script
+        run: npx tsx lib/script.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}

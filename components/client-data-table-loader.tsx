@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const SKELETON_ROWS = 5;
+const SKELETON_ROWS = 80;
 const SKELETON_COLS = 14; // 6 fixed + 8 tags
 
 const ClientDataTableLoader = () => {

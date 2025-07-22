@@ -76,7 +76,7 @@ const ClientDataTable = () => {
 
   if (loading) {
     return <div>
-      <ClientDataTableLoader/>
+      <ClientDataTableLoader />
     </div>
   }
 
