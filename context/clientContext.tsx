@@ -3,6 +3,7 @@
 import { ClientData, TagUpdateProps } from "@/lib/types"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import axios from "axios"
+import { testSupabase } from "@/lib/supabase_edge"
 interface ClientContextProps {
   clientData: ClientData[]
   loading: boolean
@@ -34,6 +35,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 
   const fetchClientData = async (date:string) => {
     try {
+      await testSupabase()
       const response = await axios.get('/api/client', {
         params: {
           date: selectedDate
