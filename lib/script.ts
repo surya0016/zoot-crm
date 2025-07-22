@@ -1,6 +1,6 @@
 import { db } from "./db";
 
-const updateOverdueTagTimers = async () => {
+export const updateOverdueTagTimers = async () => {
   console.log("Running scheduled task to update overdue tag timers...");
   
   try {
@@ -34,6 +34,3 @@ const updateOverdueTagTimers = async () => {
     await db.$disconnect();
   }
 }
-
-// Run the function immediately
-updateOverdueTagTimers();
