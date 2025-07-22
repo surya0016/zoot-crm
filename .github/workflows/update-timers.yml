@@ -27,6 +27,9 @@ jobs:
         
       - name: Generate Prisma client
         run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
         
       - name: Run timer update script
         run: npx tsx lib/script.ts
