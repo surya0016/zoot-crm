@@ -3,7 +3,6 @@
 import { ClientData, TagUpdateProps } from "@/lib/types"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import axios from "axios"
-import { updateOverdueTagTimers } from "@/lib/script"
 interface ClientContextProps {
   clientData: ClientData[]
   loading: boolean
@@ -40,7 +39,7 @@ export function ClientContextProvider({children}:{children: ReactNode}){
           date: selectedDate
         }
       })
-      await updateOverdueTagTimers(); // Run the scheduled task to update overdue tag timers
+      
       console.log("Overdue tag timers updated successfully")
       if (response.status === 200) {
         console.log("Client Data Fetched") 
