@@ -20,17 +20,14 @@ import { useClientContext } from '@/context/clientContext';
 function AddClient() {
   const [name, setName] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { addClient } = useClientContext();
+  const { addClient, dataLoading } = useClientContext();
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      setLoading(true);
       addClient(name);
     } catch (error) {
       console.error("Error creating client:", error);
     } finally {
-      setLoading(false);
       setIsDialogOpen(false);
     }
   }
@@ -67,7 +64,7 @@ function AddClient() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" onClick={handleSubmit} disabled={loading}>Save changes {loading ? <Loader className='animate-spin'/> : ''}</Button>
+            <Button type="submit" onClick={handleSubmit} disabled={dataLoading}>Save changes {dataLoading ? <Loader className='animate-spin'/> : ''}</Button>
           </DialogFooter>
         </DialogContent>
       </form>

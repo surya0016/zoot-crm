@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { updateOverdueTagTimers } from "@/lib/script";
 import { TagTimerProps } from "@/lib/types";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
@@ -84,8 +83,6 @@ export async function GET(req: Request) {
     console.log(
       "Fetched clients [D:\\zoot-crm\\app\\api\\client\\route.ts]:",clients.length === 0 ? "No clients found" : `${clients.length} clients found`
     );
-    await updateOverdueTagTimers(); // Run the scheduled task to update overdue tag timers
-    console.log("Overdue tag timers updated successfully");
     return NextResponse.json({
       clients,
     });

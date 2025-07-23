@@ -39,8 +39,6 @@ export function ClientContextProvider({children}:{children: ReactNode}){
           date: selectedDate
         }
       })
-      
-      console.log("Overdue tag timers updated successfully")
       if (response.status === 200) {
         console.log("Client Data Fetched") 
         setClientData(response.data.clients)
@@ -57,11 +55,15 @@ export function ClientContextProvider({children}:{children: ReactNode}){
 
   const addClient = async (clientName: string) => {
     try {
+      setDataLoading(true)
       const response = await axios.post('/api/client/create', { name: clientName })
       await fetchClientData(selectedDate); // Always refresh from backend
+      console.log("Client added successfully")
     } catch (error) {
       console.error("Error in addClient: ", error)
       setError("Failed to add client")
+    } finally {
+      setDataLoading(false)
     }
   }
 
@@ -110,13 +112,6 @@ export function ClientContextProvider({children}:{children: ReactNode}){
     setLoading(true)
     fetchClientData(selectedDate)
   },[selectedDate])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchClientData(selectedDate);
-    }, 60000); // every 60 seconds
-    return () => clearInterval(interval);
-  }, [selectedDate]);
 
   const value: ClientContextProps = {
     clientData: clientData || [], 
