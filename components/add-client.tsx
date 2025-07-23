@@ -33,7 +33,7 @@ function AddClient() {
   }
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <form onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit}>
         <DialogTrigger asChild>
           <Button className='cursor-pointer' variant="outline"><Plus/> Create</Button>
         </DialogTrigger>
