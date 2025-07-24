@@ -1,6 +1,7 @@
-import ClientTable from "@/components/all-client-data-table";
+import AllClientTable from "@/components/all-client-data-table";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { filterStatusOptions } from "@/lib/utils";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -14,7 +15,7 @@ export default async function Home() {
   return (
     <div className="">
       <main className="p-4 lg:p-6">
-        <ClientTable />
+        <AllClientTable />
       </main>
     </div>
   );

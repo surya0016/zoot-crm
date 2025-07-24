@@ -17,30 +17,38 @@ import CountDown from "./countdown-timer";
 import StatusComponent from "./status-component";
 import AddClient from "./add-client";
 import AddNote from "./add-note";
-import { cn, dateFormatter } from "@/lib/utils";
+import { cn, dateFormatter, filterStatusOptions, filterTagOptions } from "@/lib/utils";
 import ClientDataTableLoader from "./client-data-table-loader";
 import ErrorPage from "./client-data-table-error";
 import axios from "axios";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
+import { FilterDropDown } from "./filter/dropdown";
 
-const ClientDataTable = () => {
-  const { selectedDate, clientData, error, loading, updateTag } = useClientContext();
+const AllClientDataTable = () => {
+  const { clientData, error, loading, updateTag } = useClientContext();
   const [clients, setClients] = useState(clientData || []);
   const [clientTags, setClientTags] = useState<{ [key: string]: (string | null)[] }>({});
   const [openNoteEntryId, setOpenNoteEntryId] = useState<string | null>(null);
   const [searchClient, setSearchClient] = useState(clientData[0]?.name || "");
+  const [filters, setFilters] = useState({
+    status: "all",
+    latestTag: "all",
+    createdDate: "all"
+  })
 
   const fetchAllClientData = async () => {
     try {
       const response = await axios.get('/api/client/get/all-client')
+      console.log(response.data)
       setClients(response.data.clients);
-      console.log("Client Data Fetched");      
+      console.log("CLIENTSSSSSS: ",clients);      
     } catch (error) {
       console.error("Error fetching all client data:", error);
       return;      
     }
   }
+
   useEffect(() => {
     fetchAllClientData();
   }, [clientData])
@@ -83,12 +91,16 @@ const ClientDataTable = () => {
     }
   };
 
-  const searchDebouncer = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let timer;
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      setSearchClient(event.target.value);
-    }, 500);
+  const getFilteredLatestTag = (tag:string) => {
+    return clients.filter(client => {
+      const latestTag = getLatestTag(client.id)
+      const filteredLatestTag = filters.latestTag === "all" || latestTag === tag
+
+      const MatchStatus = filters.status == "all" || client.entry.tagTimers?.some(timer => 
+        timer.tagField === getCurrentStep(client.id) && timer.tagStatus === filters.status
+      )
+      return filteredLatestTag && MatchStatus
+    })
   }
 
   if (error) {
@@ -121,35 +133,22 @@ const ClientDataTable = () => {
           </span>
         </div>
         <div className="flex items-center gap-2">          
-          <AddClient/>
+          <div className="">
+            <FilterDropDown 
+              options={filterTagOptions}
+              onChange={(value)=>{
+                setFilters(prev => ({...prev, latestTag: value}))
+              }}
+            />
+            <FilterDropDown
+              options={filterStatusOptions}
+              onChange={(value)=>{
+                setFilters(prev => ({...prev, status: value}))
+              }}
+            />
+          </div>
         </div>
       </div>
-      {clientData.length === 0 ? (
-        <Table className="overflow-x-scroll">
-        <TableHeader>
-            <TableRow>
-              <TableHead className="border-l border-t text-center font-bold">No.</TableHead>
-              <TableHead className="border-l border-t text-center font-bold">Client Name</TableHead>
-              <TableHead className="border-l border-t text-center font-bold">Note/Link</TableHead>
-              <TableHead className="border-l border-t text-center font-bold">Latest Tag</TableHead>
-              <TableHead className="border-l border-t text-center font-bold min-w-25">Timer</TableHead>
-              <TableHead className="border-l border-t text-center font-bold">Status</TableHead>
-              {Array.from({ length: 8 }, (_, index) => (
-                <TableHead key={index} className="border-l border-r-1 border-t text-center font-bold">
-                  Tag {index + 1}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell colSpan={14} className="text-2xl text-center py-12 border text-zinc-400">
-              No clients found for {dateFormatter(selectedDate)}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-        </Table>
-      ) : (
         <Table className="overflow-x-scroll">
         <TableHeader>
             <TableRow>
@@ -168,7 +167,7 @@ const ClientDataTable = () => {
             </TableRow>
           </TableHeader>
         <TableBody>
-          {clients
+          {getFilteredLatestTag(filters.latestTag)
             .filter(client => client.name.toLowerCase().includes(searchClient.toLowerCase()))
             .map((client, index)=>{
               const clientTagsArray = getClientTags(client.id);
@@ -191,7 +190,9 @@ const ClientDataTable = () => {
                 </TableCell>
                 <TableCell className="border text-center font-semibold">{latestTag ? latestTag : "No Tag Selected"}</TableCell>
                 <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
-                <TableCell className="border text-center"><StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/></TableCell>
+                <TableCell className="border text-center">
+                  <StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/>
+                </TableCell>
                 <TableCell className="border text-center">{dateFormatter(`${client.entry.createdAt}`)}</TableCell>
                 {Array.from({ length: 8 }, (_, tagIndex) => (
                   <TableCell key={tagIndex} className="border text-center border-r-1">
@@ -211,9 +212,7 @@ const ClientDataTable = () => {
             })}
         </TableBody>
         </Table>
-      )
-      }
     </div>
   )
 }
-export default ClientDataTable
+export default AllClientDataTable
