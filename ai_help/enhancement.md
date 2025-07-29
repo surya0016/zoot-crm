@@ -2,7 +2,7 @@ Here are key enhancements to make your project production-ready:
 
 ---
 
-### 1. **Authentication & Authorization**
+### 1. **Authentication & Authorization** ✔
 - Ensure all sensitive API routes are protected by authentication checks.
 - Implement Role-Based Access Control (RBAC) if you have multiple user types (admin, staff, etc.).
 - Enforce Supabase Row Level Security (RLS) on all tables with user data.

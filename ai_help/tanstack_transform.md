@@ -140,7 +140,7 @@ const table = useReactTable({
 - [ ] Implement row selection and bulk actions
 - [ ] Add loading and error states
 - [ ] Test all existing functionality
-- [X] Optimize performance
+- [ ] Optimize performance
 
 ---
 

@@ -99,6 +99,7 @@ const AllClientDataTable = () => {
       const MatchStatus = filters.status == "all" || client.entry.tagTimers?.some(timer => 
         timer.tagField === getCurrentStep(client.id) && timer.tagStatus === filters.status
       )
+      
       return filteredLatestTag && MatchStatus
     })
   }
@@ -191,7 +192,7 @@ const AllClientDataTable = () => {
                 <TableCell className="border text-center font-semibold">{latestTag ? latestTag : "No Tag Selected"}</TableCell>
                 <TableCell className="border text-center"><CountDown entryId={client.entry.id} tagName={latestTag || ""} /></TableCell>
                 <TableCell className="border text-center">
-                  <StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/>
+                  <StatusComponent entryId={client.entry.id} tagName={latestTag || ""}/>  
                 </TableCell>
                 <TableCell className="border text-center">{dateFormatter(`${client.entry.createdAt}`)}</TableCell>
                 {Array.from({ length: 8 }, (_, tagIndex) => (
